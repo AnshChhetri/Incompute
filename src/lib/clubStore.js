@@ -8,6 +8,7 @@ import {
 const STORAGE_KEYS = {
   NOTICES: 'incompute_notices_v1',
   IDEAS: 'incompute_ideas_v1',
+  APPLICATIONS: 'incompute_applications_v1',
   REGISTRATIONS: 'incompute_registrations_v1',
   GALLERY: 'incompute_gallery_v1',
   AUDIT: 'incompute_audit_v1',
@@ -153,6 +154,38 @@ export function getIdeas() {
   return readJson(STORAGE_KEYS.IDEAS, INITIAL_IDEAS);
 }
 
+export function getPublicIdeas() {
+  return getIdeas().filter((item) => item.status === 'Planned' || item.status === 'Under review');
+}
+
+export function addIdeaSubmission(ideaInput) {
+  const ideas = getIdeas();
+  const newIdea = {
+    id: `idea-${Date.now()}`,
+    title: ideaInput.title.trim(),
+    type: ideaInput.type || 'Technical',
+    preferredMonth: ideaInput.preferredMonth.trim() || 'Upcoming Semester',
+    audience: ideaInput.audience.trim() || 'All Computing Students',
+    description: ideaInput.description.trim(),
+    submittedBy: ideaInput.name.trim(),
+    submitterRole: ideaInput.role || 'Student',
+    courseYear: ideaInput.courseYear || 'BCA',
+    wantsToHelp: Boolean(ideaInput.wantsToHelp),
+    status: 'New',
+    votes: 1,
+    createdAt: new Date().toISOString().slice(0, 10),
+  };
+  writeJson(STORAGE_KEYS.IDEAS, [newIdea, ...ideas]);
+  logAuditAction({
+    actor: `${newIdea.submittedBy} (${newIdea.submitterRole})`,
+    action: 'Suggested Idea',
+    entity: 'EventIdea',
+    entityId: newIdea.id,
+    summary: `Submitted "${newIdea.title}" (${newIdea.type}) for Program Committee review.`,
+  });
+  return newIdea;
+}
+
 export function voteIdea(id) {
   const ideas = getIdeas().map((item) =>
     item.id === id ? { ...item, votes: item.votes + 1 } : item
@@ -174,6 +207,39 @@ export function updateIdeaStatus(id, status, actor) {
     summary: `Updated idea ${id} status to ${status}.`,
   });
   return ideas;
+}
+
+// --- Join the Club Applications ---
+export function getClubApplications() {
+  return readJson(STORAGE_KEYS.APPLICATIONS, []);
+}
+
+export function addClubApplication(appInput) {
+  const apps = getClubApplications();
+  const normalizedEmail = appInput.email.trim().toLowerCase();
+  if (apps.some((a) => a.email.toLowerCase() === normalizedEmail)) {
+    return { ok: false, error: 'An application with this email has already been submitted.' };
+  }
+  const record = {
+    id: `join-${Date.now()}`,
+    name: appInput.name.trim(),
+    email: normalizedEmail,
+    courseYear: appInput.courseYear,
+    interests: appInput.interests,
+    hoursPerWeek: appInput.hoursPerWeek,
+    note: (appInput.note || '').trim(),
+    consentRecorded: Boolean(appInput.consentRecorded),
+    createdAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
+  };
+  writeJson(STORAGE_KEYS.APPLICATIONS, [record, ...apps]);
+  logAuditAction({
+    actor: record.name,
+    action: 'Club Application',
+    entity: 'Membership',
+    entityId: record.id,
+    summary: `Applied to join InCompute (${record.courseYear}, ${record.interests.join(', ')}).`,
+  });
+  return { ok: true, record };
 }
 
 // --- Gallery ---
@@ -279,6 +345,15 @@ export function getEventCountdownLabel(eventDateIso, referenceDate = new Date())
   if (diffDays <= 0) return 'Happening today';
   if (diffDays === 1) return '1 day left';
   return `${diffDays} days left`;
+}
+
+export function getEventCountdownParts(eventDateIso, now = new Date()) {
+  const target = new Date(`${eventDateIso}T09:30:00`);
+  const diffMs = Math.max(0, target.getTime() - now.getTime());
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diffMs / (1000 * 60)) % 60);
+  return { days, hours, minutes };
 }
 
 // --- Role-Based Auth (Admin, Faculty Reviewer, Editor, Member) ---

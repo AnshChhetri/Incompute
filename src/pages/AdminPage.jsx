@@ -10,6 +10,7 @@ import {
   updateNoticeStatus,
   getIdeas,
   updateIdeaStatus,
+  getClubApplications,
   getGalleryAlbums,
   toggleAlbumConsent,
   getRegistrations,
@@ -28,6 +29,7 @@ export default function AdminPage() {
   const [notices, setNotices] = useState(() => getNotices());
   const [ideas, setIdeas] = useState(() => getIdeas());
   const [albums, setAlbums] = useState(() => getGalleryAlbums());
+  const [applications] = useState(() => getClubApplications());
   const [registrations] = useState(() => getRegistrations());
   const [auditLog, setAuditLog] = useState(() => getAuditLog());
 
@@ -358,10 +360,10 @@ export default function AdminPage() {
                 ))}
               </div>
 
-              <span className="eyebrow">BACKUP REGISTRATIONS</span>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+              <span className="eyebrow">BACKUP REGISTRATIONS &amp; APPLICATIONS</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
                 <span style={{ fontSize: '0.9rem', color: 'var(--ink-muted)' }}>
-                  {registrations.length} local backup records
+                  {registrations.length} local backup records · {applications.length} join requests
                 </span>
                 <button type="button" className="btn btn-primary btn-sm" onClick={exportRegistrationsCsv}>
                   <Download size={15} /> Export CSV

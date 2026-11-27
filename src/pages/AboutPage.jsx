@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { CHARTER_RULES, CLUB_INFO, CLUB_STRUCTURE } from '../data/clubData';
+import { CLUB_INFO, CLUB_STRUCTURE } from '../data/clubData';
 
 export default function AboutPage() {
   return (
@@ -76,41 +75,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section-band band-white">
-        <div className="container">
-          <div className="section-header">
-            <div>
-              <span className="eyebrow">CHARTER GOVERNANCE</span>
-              <h2>Rules the site follows</h2>
-              <p style={{ marginBottom: 0 }}>
-                Our charter sets clear guardrails for approvals, privacy, and official registration.
-              </p>
-            </div>
-            <Link to="/get-involved" className="btn btn-primary">
-              Bring one idea
-            </Link>
-          </div>
-
-          <div className="card table-wrap" style={{ padding: 0, overflow: 'hidden' }}>
-            <table>
-              <thead>
-                <tr>
-                  <th>Charter Rule</th>
-                  <th>How It Works on This Site</th>
-                </tr>
-              </thead>
-              <tbody>
-                {CHARTER_RULES.map((item) => (
-                  <tr key={item.rule}>
-                    <td style={{ fontWeight: 600, color: 'var(--ink)' }}>{item.rule}</td>
-                    <td style={{ color: 'var(--ink-muted)' }}>{item.meaning}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

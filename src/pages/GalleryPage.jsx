@@ -78,7 +78,7 @@ export default function GalleryPage() {
                         border: '1px solid var(--grey-border)',
                         borderRadius: '8px',
                         overflow: 'hidden',
-                        background: '#FFFFFF',
+                        background: 'var(--surface-elevated)',
                         cursor: 'pointer',
                       }}
                     >

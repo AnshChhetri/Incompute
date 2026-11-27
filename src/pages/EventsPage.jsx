@@ -83,7 +83,7 @@ export default function EventsPage() {
 
       <section className="section-band band-warm">
         <div className="container">
-          <div className="callout" style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--grey-border)', borderLeft: '4px solid var(--blue)' }}>
+          <div className="callout" style={{ backgroundColor: 'var(--surface-elevated)', border: '1px solid var(--grey-border)', borderLeft: '4px solid var(--blue)' }}>
             <ShieldAlert size={18} style={{ color: 'var(--blue)', flexShrink: 0, marginTop: '3px' }} />
             <div style={{ fontSize: '0.9rem', color: 'var(--ink-muted)' }}>
               <strong style={{ color: 'var(--ink)' }}>Charter Notice:</strong> Individual member and faculty names are hidden on the

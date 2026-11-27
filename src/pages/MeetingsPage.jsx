@@ -157,7 +157,7 @@ export default function MeetingsPage() {
 
       <section className="section-band band-warm">
         <div className="container">
-          <div className="callout" style={{ backgroundColor: '#FFFFFF', border: '1px solid var(--grey-border)', borderLeft: '4px solid var(--blue)' }}>
+          <div className="callout" style={{ backgroundColor: 'var(--surface-elevated)', border: '1px solid var(--grey-border)', borderLeft: '4px solid var(--blue)' }}>
             <Calendar size={20} style={{ color: 'var(--blue)', flexShrink: 0, marginTop: '2px' }} />
             <div>
               <strong style={{ display: 'block', marginBottom: '0.2rem', color: 'var(--ink)' }}>

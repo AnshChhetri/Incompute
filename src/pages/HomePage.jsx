@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CLUB_INFO, EVENTS_DATA } from '../data/clubData';
+import {
+  CLUB_INFO,
+  EVENTS_DATA,
+  COMPUTING_STREAMS,
+  CAMPUS_ECOSYSTEM,
+} from '../data/clubData';
 import {
   getNextUpcomingEvent,
   getEventCountdownLabel,
+  getEventCountdownParts,
   getPublicNotices,
   isNoticeNew,
   getGalleryAlbums,
@@ -12,72 +18,27 @@ import {
 const HIGHLIGHTS = [
   { value: '6+', label: 'Events per year', sub: 'Charter minimum across both semesters' },
   { value: '4', label: 'Computing streams', sub: 'BCA, Data Science, AI & ML, Cyber Security' },
-  { value: '100%', label: 'Student-led', sub: 'Guided by Faculty Advisors & HOD' },
+  { value: '100%', label: 'Student-led', sub: 'Guided by Faculty Advisors & Observer' },
   { value: '4', label: 'Observance days', sub: 'Marked every year on the club calendar' },
-];
-
-const DISCIPLINE_PILLS = [
-  'BCA',
-  'BSc Data Science',
-  'AI & ML',
-  'Cyber Security',
-  'School Outreach',
 ];
 
 const WHY_JOIN = [
   {
-    title: 'Hands-on technical workshops',
-    text: 'Practical sessions in Git, web development, data analytics, and security labs.',
+    title: 'Technical skills',
+    text: 'Practical workshops in Git, styled CSS, web development, data analytics, AI/ML, and security labs.',
   },
   {
-    title: 'Peer-led hackathons & challenges',
-    text: 'In-house coding sprints and inter-school events hosted in campus computer labs.',
+    title: 'Leadership & management',
+    text: 'Plan hackathons, lead committees, manage event schedules, and coordinate with faculty mentors.',
   },
   {
-    title: 'Official Inspiria certification',
-    text: 'Verified participation and volunteer certificates issued after attendance checks.',
+    title: 'Making friends across years',
+    text: 'Collaborate with peers and Year Advisors across Years 1–4 in BCA, Data Science, AI/ML, and Cyber Security.',
   },
   {
-    title: 'Cross-year mentorship',
-    text: 'Third- and fourth-year advisors supporting first- and second-year learners.',
+    title: 'Certificates',
+    text: 'Earn official Inspiria participation and volunteer certificates verified after event attendance.',
   },
-];
-
-const DIFFERENTIATORS = [
-  {
-    title: 'Charter transparency',
-    text: 'Every notice, event, and gallery album follows clear Faculty Advisor approval rules.',
-    highlight: false,
-  },
-  {
-    title: 'Bring one idea',
-    text: 'Any student can propose a workshop or challenge and help shape the semester calendar.',
-    highlight: false,
-  },
-  {
-    title: 'Official registration',
-    text: 'Events link directly to Inspiria’s official registration facility with on-site backup.',
-    highlight: false,
-  },
-  {
-    title: 'Consent-first gallery',
-    text: 'Photos are published only in event albums where student consent has been recorded.',
-    highlight: false,
-  },
-  {
-    title: 'School outreach',
-    text: 'Annual workshops and hackathons welcoming Classes 11 & 12 students from Siliguri.',
-    highlight: true,
-  },
-];
-
-const TRACKS = [
-  'Web Development',
-  'Data Analytics',
-  'AI & ML',
-  'Cyber Security',
-  'UI/UX & Design',
-  'Testing & QA',
 ];
 
 const STUDENT_VOICES = [
@@ -99,8 +60,16 @@ const STUDENT_VOICES = [
 ];
 
 export default function HomePage() {
-  const nextEvent = getNextUpcomingEvent();
-  const countdown = nextEvent ? getEventCountdownLabel(nextEvent.date) : null;
+  const [now, setNow] = useState(() => new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextEvent = getNextUpcomingEvent(now);
+  const countdownLabel = nextEvent ? getEventCountdownLabel(nextEvent.date, now) : null;
+  const countdownParts = nextEvent ? getEventCountdownParts(nextEvent.date, now) : null;
   const featuredEvents = EVENTS_DATA.filter((e) => e.status !== 'Held').slice(0, 3);
   const semesterTimeline = EVENTS_DATA.filter((e) => e.status !== 'Held').slice(0, 5);
   const latestNotices = getPublicNotices().slice(0, 3);
@@ -111,25 +80,36 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Hero Section */}
-      <section className="section-band band-navy">
+      {/* Hero Section — Inspiria School of Computer Application + InCompute */}
+      <section className="section-band band-navy" style={{ borderBottom: '4px solid #FFD306' }}>
         <div className="container">
           <div className="grid-2" style={{ alignItems: 'center', gap: '40px' }}>
             <div>
-              <span className="eyebrow eyebrow-yellow">INSPIRIA KNOWLEDGE CAMPUS · INCOMPUTE</span>
-              <h1 style={{ marginBottom: '1.25rem' }}>
-                Take your computing skills to a professional level
+              <span className="eyebrow eyebrow-yellow">
+                INSPIRIA KNOWLEDGE CAMPUS · SCHOOL OF COMPUTER APPLICATION
+              </span>
+              <h1 style={{ marginBottom: '1rem' }}>
+                InCompute — {CLUB_INFO.tagline}
               </h1>
-              <p style={{ color: 'rgba(255, 255, 255, 0.86)', marginBottom: '2rem', fontSize: '1.05rem' }}>
-                The official student computing club for BCA, Data Science, AI &amp; ML, and Cyber
-                Security — built around workshops, hackathons, and peer mentorship.
+              <p style={{ color: 'rgba(255, 255, 255, 0.88)', marginBottom: '1.5rem', fontSize: '1.05rem' }}>
+                One trusted home for computing students across BCA, BSc Data Science, AI &amp; ML,
+                and Cyber Security — bridging classroom theory with workshops, hackathons, and
+                peer mentorship.
               </p>
+
+              <div className="hero-meta-strip">
+                <span className="hero-meta-pill">Years 1 to 4</span>
+                <span className="hero-meta-pill">4 Computing Streams</span>
+                <span className="hero-meta-pill">On-Campus Labs</span>
+                <span className="hero-meta-pill">Official Certification</span>
+              </div>
+
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
                 <Link to="/events" className="btn btn-primary">
-                  Explore Events
+                  See upcoming events
                 </Link>
                 <Link to="/get-involved" className="btn btn-outline-light">
-                  Get Involved
+                  Suggest an event
                 </Link>
               </div>
             </div>
@@ -137,43 +117,62 @@ export default function HomePage() {
             {nextEvent ? (
               <div
                 style={{
-                  backgroundColor: '#0230C8',
-                  borderRadius: '8px',
-                  padding: '2.25rem',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
+                  backgroundColor: 'rgba(2, 48, 200, 0.92)',
+                  borderRadius: '10px',
+                  padding: '2rem',
+                  border: '1px solid rgba(255, 211, 6, 0.45)',
+                  boxShadow: '0 16px 36px rgba(0, 0, 0, 0.25)',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
                   <span className="eyebrow eyebrow-yellow" style={{ marginBottom: 0 }}>
                     NEXT UPCOMING EVENT
                   </span>
-                  <span className="tag tag-yellow" style={{ borderColor: 'transparent' }}>
-                    {countdown}
+                  <span className="tag" style={{ background: '#FFD306', color: '#0B1020', borderColor: 'transparent' }}>
+                    {countdownLabel}
                   </span>
                 </div>
-                <h3 style={{ color: '#FFFFFF', fontSize: '1.35rem', marginBottom: '0.65rem' }}>
+
+                <h2 style={{ color: '#FFFFFF', fontSize: '1.4rem', marginBottom: '0.5rem' }}>
                   {nextEvent.title}
-                </h3>
-                <p style={{ color: 'rgba(255, 255, 255, 0.85)', fontSize: '0.95rem', marginBottom: '1.5rem' }}>
-                  {nextEvent.summary}
+                </h2>
+                <p style={{ color: 'rgba(255, 255, 255, 0.86)', fontSize: '0.92rem', marginBottom: '1.25rem' }}>
+                  {nextEvent.displayDate} · {nextEvent.venue}
                 </p>
+
+                {countdownParts && (
+                  <div className="countdown-strip" aria-label="Live countdown to next event">
+                    <div className="countdown-box">
+                      <span className="countdown-num">{countdownParts.days}</span>
+                      <span className="countdown-unit">Days</span>
+                    </div>
+                    <div className="countdown-box">
+                      <span className="countdown-num">{countdownParts.hours}</span>
+                      <span className="countdown-unit">Hours</span>
+                    </div>
+                    <div className="countdown-box">
+                      <span className="countdown-num">{countdownParts.minutes}</span>
+                      <span className="countdown-unit">Mins</span>
+                    </div>
+                  </div>
+                )}
+
                 <div
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    gap: '0.75rem',
+                    flexWrap: 'wrap',
                     borderTop: '1px solid rgba(255, 255, 255, 0.2)',
                     paddingTop: '1rem',
-                    fontSize: '0.875rem',
-                    color: '#FFFFFF',
                   }}
                 >
-                  <span>{nextEvent.displayDate} · {nextEvent.venue}</span>
-                  <Link
-                    to={`/events/${nextEvent.id}`}
-                    style={{ color: '#FFD306', fontWeight: 600, whiteSpace: 'nowrap' }}
-                  >
-                    View details →
+                  <span style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.9)' }}>
+                    {nextEvent.seatsLeft} seats left · {nextEvent.category}
+                  </span>
+                  <Link to={`/events/${nextEvent.id}`} className="btn btn-primary btn-sm">
+                    Register →
                   </Link>
                 </div>
               </div>
@@ -181,16 +180,16 @@ export default function HomePage() {
               <div
                 style={{
                   backgroundColor: '#0230C8',
-                  borderRadius: '8px',
-                  padding: '2.25rem',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
+                  borderRadius: '10px',
+                  padding: '2rem',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
                 }}
               >
                 <span className="eyebrow eyebrow-yellow">EVENT CALENDAR</span>
                 <h3 style={{ color: '#FFFFFF', marginBottom: '0.75rem' }}>
                   No upcoming events published yet
                 </h3>
-                <p style={{ color: 'rgba(255, 255, 255, 0.85)', marginBottom: '1.5rem' }}>
+                <p style={{ color: 'rgba(255, 255, 255, 0.86)', marginBottom: '1.5rem' }}>
                   Have a workshop or coding challenge in mind? Propose it for the semester calendar.
                 </p>
                 <Link to="/get-involved" className="btn btn-primary btn-sm">
@@ -202,12 +201,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 1: Club Highlights (White) */}
+      {/* Section 1: Club Highlights & Computing Streams (White) */}
       <section className="section-band band-white">
         <div className="container">
-          <h2 style={{ marginBottom: '2rem' }}>Club highlights</h2>
+          <div className="section-header">
+            <div>
+              <span className="eyebrow">SCHOOL OF COMPUTER APPLICATION</span>
+              <h2>Specialisations &amp; club highlights</h2>
+            </div>
+            <Link to="/about" className="btn btn-outline btn-sm">
+              Club Charter
+            </Link>
+          </div>
 
-          <div className="grid-4" style={{ marginBottom: '1.75rem' }}>
+          <div className="grid-4" style={{ marginBottom: '2rem' }}>
             {HIGHLIGHTS.map((item) => (
               <div key={item.label} className="stat-card">
                 <div className="stat-value">{item.value}</div>
@@ -217,41 +224,64 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-              gap: '16px',
-            }}
-          >
-            {DISCIPLINE_PILLS.map((label) => (
+          <div className="grid-4">
+            {COMPUTING_STREAMS.map((stream) => (
+              <article key={stream.code} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <span className="tag tag-blue" style={{ marginBottom: '0.75rem' }}>
+                    {stream.code}
+                  </span>
+                  <h3 style={{ fontSize: '1.05rem', marginBottom: '0.45rem' }}>{stream.title}</h3>
+                  <p style={{ fontSize: '0.875rem', marginBottom: '1rem' }}>{stream.focus}</p>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                  {stream.tracks.map((t) => (
+                    <span key={t} className="tag" style={{ fontSize: '0.72rem' }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2: Why Join InCompute (4 Cards on Inspiria Blue) */}
+      <section className="section-band band-blue">
+        <div className="container">
+          <span className="eyebrow eyebrow-yellow">FOR STUDENTS (YEARS 1 TO 4)</span>
+          <h2 style={{ marginBottom: '2rem' }}>Why join InCompute?</h2>
+
+          <div className="grid-4">
+            {WHY_JOIN.map((item) => (
               <div
-                key={label}
+                key={item.title}
                 style={{
-                  background: '#FFFFFF',
-                  border: '1px solid var(--grey-border)',
-                  borderRadius: '8px',
-                  padding: '0.9rem 1rem',
-                  textAlign: 'center',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  color: 'var(--ink-muted)',
+                  background: 'rgba(2, 18, 122, 0.45)',
+                  border: '1px solid rgba(255, 255, 255, 0.16)',
+                  borderTop: '3px solid #FFD306',
+                  borderRadius: '10px',
+                  padding: '1.4rem',
                 }}
               >
-                {label}
+                <h3 style={{ fontSize: '1.08rem', marginBottom: '0.5rem' }}>{item.title}</h3>
+                <p style={{ color: 'rgba(255, 255, 255, 0.88)', margin: 0, fontSize: '0.9rem' }}>
+                  {item.text}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 2: Upcoming Events & Semester Timeline (Warm) */}
+      {/* Section 3: Upcoming Events & This Semester at a Glance (Warm Cream) */}
       <section className="section-band band-warm">
         <div className="container">
           <div className="section-header">
             <div>
               <span className="eyebrow">OUR EVENTS</span>
-              <h2>Upcoming workshops &amp; sessions</h2>
+              <h2>Upcoming workshops &amp; hackathons</h2>
             </div>
             <Link to="/events" className="btn btn-outline btn-sm">
               Full Calendar
@@ -267,12 +297,13 @@ export default function HomePage() {
               >
                 <div
                   style={{
-                    height: '132px',
-                    backgroundColor: '#02127A',
-                    padding: '1.25rem',
+                    height: '124px',
+                    background: 'linear-gradient(135deg, #02127A 0%, #0230C8 100%)',
+                    padding: '1.15rem 1.25rem',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    borderBottom: '3px solid #FFD306',
                   }}
                 >
                   <span className="eyebrow eyebrow-yellow" style={{ marginBottom: 0 }}>
@@ -285,7 +316,7 @@ export default function HomePage() {
 
                 <div
                   style={{
-                    padding: '1.5rem',
+                    padding: '1.4rem',
                     display: 'flex',
                     flexDirection: 'column',
                     flexGrow: 1,
@@ -293,8 +324,8 @@ export default function HomePage() {
                   }}
                 >
                   <div>
-                    <h3 style={{ marginBottom: '0.6rem' }}>{evt.title}</h3>
-                    <p style={{ fontSize: '0.9375rem', marginBottom: '1.5rem' }}>{evt.summary}</p>
+                    <h3 style={{ marginBottom: '0.55rem' }}>{evt.title}</h3>
+                    <p style={{ fontSize: '0.92rem', marginBottom: '1.25rem' }}>{evt.summary}</p>
                   </div>
 
                   <div
@@ -307,11 +338,11 @@ export default function HomePage() {
                       borderTop: '1px solid var(--grey-border)',
                     }}
                   >
-                    <span style={{ fontSize: '0.8125rem', fontWeight: 500, color: 'var(--ink-muted)' }}>
+                    <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--ink-muted)' }}>
                       {evt.displayDate}
                     </span>
                     <Link to={`/events/${evt.id}`} className="btn btn-secondary btn-sm">
-                      View Event
+                      Register
                     </Link>
                   </div>
                 </div>
@@ -319,9 +350,9 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* Semester Timeline */}
+          {/* This Semester at a Glance */}
           <div className="card">
-            <span className="eyebrow">SEMESTER TIMELINE</span>
+            <span className="eyebrow">THIS SEMESTER AT A GLANCE</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {semesterTimeline.map((evt) => (
                 <div
@@ -336,9 +367,10 @@ export default function HomePage() {
                     borderBottom: '1px solid var(--grey-border)',
                   }}
                 >
-                  <div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.55rem' }}>
                     <strong style={{ color: 'var(--ink)' }}>{evt.title}</strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--ink-muted)', marginLeft: '0.65rem' }}>
+                    <span className="tag tag-blue">{evt.category}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--ink-muted)' }}>
                       {evt.displayDate}
                     </span>
                   </div>
@@ -352,7 +384,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section 3: Latest Notices & About Us (White) */}
+      {/* Section 4: Latest Notices & Campus Learning Ecosystem (White) */}
       <section className="section-band band-white">
         <div className="container">
           <div className="section-header">
@@ -375,9 +407,9 @@ export default function HomePage() {
                 <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.65rem' }}>
                   {notice.pinned && <span className="tag tag-yellow">Pinned</span>}
                   <span className="tag tag-blue">{notice.category}</span>
-                  {isNoticeNew(notice) && <span className="tag tag-success">New</span>}
+                  {isNoticeNew(notice, now) && <span className="tag tag-success">New</span>}
                 </div>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.45rem' }}>{notice.title}</h3>
+                <h3 style={{ fontSize: '1.08rem', marginBottom: '0.45rem' }}>{notice.title}</h3>
                 <p style={{ fontSize: '0.875rem', marginBottom: '0.75rem' }}>{notice.body}</p>
                 <span style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>
                   Posted {notice.date}
@@ -386,121 +418,89 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="grid-2" style={{ alignItems: 'center', gap: '48px' }}>
-            <div
-              style={{
-                backgroundColor: 'var(--bg-warm)',
-                border: '1px solid var(--grey-border)',
-                borderRadius: '8px',
-                padding: '2.5rem',
-              }}
-            >
-              <span className="eyebrow">CHARTER GOVERNANCE</span>
-              <h3 style={{ marginBottom: '1.25rem' }}>How InCompute operates</h3>
-              <ul className="bullet-list">
-                <li>Faculty Advisors review plans, minutes, and public announcements</li>
-                <li>Executive Committee meets monthly to coordinate events and records</li>
-                <li>Official registration runs through Inspiria’s campus portal</li>
-                <li>Student privacy and photo consent are respected across all albums</li>
-              </ul>
+          <div className="grid-2" style={{ alignItems: 'stretch', gap: '28px' }}>
+            <div className="card-warm">
+              <span className="eyebrow">CAMPUS LEARNING ECOSYSTEM</span>
+              <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+                Built around Inspiria’s tech infrastructure
+              </h2>
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {CAMPUS_ECOSYSTEM.map((item) => (
+                  <div key={item.title} style={{ borderLeft: '3px solid #FFD306', paddingLeft: '0.9rem' }}>
+                    <h4 style={{ marginBottom: '0.15rem', color: 'var(--ink)' }}>{item.title}</h4>
+                    <p style={{ fontSize: '0.88rem', marginBottom: 0 }}>{item.text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div>
-              <span className="eyebrow">ABOUT US</span>
-              <h2 style={{ marginBottom: '1rem' }}>Student-led, industry-relevant by design</h2>
-              <p>
-                Formerly the Computing Club, InCompute brings together undergraduate students across
-                Inspiria’s School of Computer Application into one structured community.
-              </p>
-              <p style={{ marginBottom: '1.5rem' }}>
-                From practical lab sessions to guest lectures and school outreach, our calendar is
-                built around real skills, clear ownership, and open participation.
-              </p>
-              <Link to="/about" className="btn btn-outline">
-                Read Club Charter
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4: Why Join (Full-bleed Royal Blue) */}
-      <section className="section-band band-blue">
-        <div className="container">
-          <h2 style={{ marginBottom: '2.5rem' }}>Why join InCompute?</h2>
-
-          <div className="grid-2" style={{ gap: '32px' }}>
-            {WHY_JOIN.map((item) => (
-              <div
-                key={item.title}
-                style={{
-                  borderTop: '2px solid var(--yellow)',
-                  paddingTop: '1rem',
-                }}
-              >
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.4rem' }}>{item.title}</h3>
-                <p style={{ color: 'rgba(255, 255, 255, 0.86)', margin: 0, fontSize: '0.95rem' }}>
-                  {item.text}
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div>
+                <span className="eyebrow">CHARTER &amp; GOVERNANCE</span>
+                <h2 style={{ fontSize: '1.5rem', marginBottom: '0.85rem' }}>
+                  One trusted hub, zero scattered chats
+                </h2>
+                <p style={{ marginBottom: '1rem' }}>
+                  Formerly the Computing Club, InCompute operates under a clear student-led charter
+                  reviewed by Faculty Advisors and the Head of School.
                 </p>
+                <ul className="bullet-list" style={{ marginBottom: '1.5rem' }}>
+                  <li>Every notice and gallery album is approved before going live</li>
+                  <li>Official registration connects through Inspiria’s facility</li>
+                  <li>Member names appear only on the Team page — never on posters</li>
+                  <li>No student ideas in yet? Bring one idea and help shape the calendar</li>
+                </ul>
               </div>
-            ))}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <Link to="/get-involved" className="btn btn-primary">
+                  Bring one idea
+                </Link>
+                <Link to="/team" className="btn btn-outline">
+                  Meet the Team
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Section 5: What Makes Us Different (Warm) */}
+      {/* Section 5: Consent-Cleared Photo Strip (Warm Cream) */}
       <section className="section-band band-warm">
-        <div className="container">
-          <h2 style={{ marginBottom: '2rem' }}>What makes us different</h2>
-
-          <div className="grid-3">
-            {DIFFERENTIATORS.map((item) => (
-              <div
-                key={item.title}
-                className={item.highlight ? 'card-yellow' : 'card'}
-              >
-                <h3 style={{ marginBottom: '0.5rem' }}>{item.title}</h3>
-                <p style={{ margin: 0, fontSize: '0.9375rem' }}>{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section 6: Recent Consent-Cleared Gallery Strip & Committees (White) */}
-      <section className="section-band band-white">
         <div className="container">
           <div className="section-header">
             <div>
-              <span className="eyebrow">EVENT GALLERY</span>
-              <h2>Recent club moments</h2>
+              <span className="eyebrow">RECENT PHOTO STRIP</span>
+              <h2>Consent-verified club moments</h2>
             </div>
             <Link to="/gallery" className="btn btn-outline btn-sm">
               Open Gallery
             </Link>
           </div>
 
-          <div className="grid-3" style={{ marginBottom: '4rem' }}>
+          <div className="grid-3">
             {galleryStrip.map((photo) => (
               <Link
                 key={photo.id}
                 to="/gallery"
+                className="card"
                 style={{
-                  border: '1px solid var(--grey-border)',
-                  borderRadius: '8px',
+                  padding: 0,
                   overflow: 'hidden',
                   textDecoration: 'none',
-                  backgroundColor: '#FFFFFF',
+                  display: 'block',
                 }}
               >
                 <div
+                  role="img"
+                  aria-label={photo.alt}
                   style={{
                     height: '140px',
-                    backgroundColor: '#02127A',
+                    background: 'linear-gradient(135deg, #02127A 0%, #0230C8 100%)',
                     padding: '1rem',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
+                    borderBottom: '3px solid #FFD306',
                   }}
                 >
                   <span className="eyebrow eyebrow-yellow" style={{ marginBottom: 0 }}>
@@ -510,99 +510,27 @@ export default function HomePage() {
                     {photo.eventTitle}
                   </span>
                 </div>
-                <div style={{ padding: '0.85rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--ink)' }}>
+                <div style={{ padding: '0.9rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--ink)' }}>
                   {photo.caption}
                 </div>
               </Link>
             ))}
           </div>
-
-          <div className="grid-2" style={{ alignItems: 'center', gap: '48px' }}>
-            <div>
-              <span className="eyebrow">COMMITTEES &amp; MENTORSHIP</span>
-              <h2 style={{ marginBottom: '1rem' }}>A cut above the rest</h2>
-              <p style={{ marginBottom: '1.5rem' }}>
-                Four dedicated teams — Program, Publicity, Nominating, and Year Advisors — ensure
-                every workshop, hackathon, and alumni session runs smoothly from idea to review.
-              </p>
-              <Link to="/team" className="btn btn-secondary">
-                Meet the Team
-              </Link>
-            </div>
-
-            <div
-              style={{
-                backgroundColor: 'var(--bg-warm)',
-                border: '1px solid var(--grey-border)',
-                borderRadius: '8px',
-                padding: '2.25rem',
-              }}
-            >
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-                <div>
-                  <h4 style={{ color: 'var(--blue)', marginBottom: '0.25rem' }}>Program</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Workshops &amp; coding sprints</p>
-                </div>
-                <div>
-                  <h4 style={{ color: 'var(--blue)', marginBottom: '0.25rem' }}>Publicity</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Notices &amp; consent gallery</p>
-                </div>
-                <div>
-                  <h4 style={{ color: 'var(--blue)', marginBottom: '0.25rem' }}>Year Advisors</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Senior-to-junior mentoring</p>
-                </div>
-                <div>
-                  <h4 style={{ color: 'var(--blue)', marginBottom: '0.25rem' }}>Executive</h4>
-                  <p style={{ fontSize: '0.875rem', margin: 0 }}>Monthly planning &amp; charter</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Section 7: Tracks (Warm) */}
-      <section className="section-band band-warm">
-        <div className="container">
-          <h2 style={{ marginBottom: '2rem' }}>Tracks &amp; focus areas</h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: '16px',
-            }}
-          >
-            {TRACKS.map((track) => (
-              <div
-                key={track}
-                style={{
-                  background: '#FFFFFF',
-                  borderRadius: '8px',
-                  padding: '1.15rem 1rem',
-                  textAlign: 'center',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                }}
-              >
-                {track}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Section 8: Student Voices (White) */}
+      {/* Section 6: Student Voices (White) */}
       <section className="section-band band-white">
         <div className="container">
+          <span className="eyebrow">COMMUNITY</span>
           <h2 style={{ marginBottom: '2rem' }}>Student voices</h2>
           <div className="grid-3">
             {STUDENT_VOICES.map((voice) => (
-              <div key={voice.author} className="card">
+              <div key={voice.author} className="card-warm">
                 <p style={{ fontSize: '0.95rem', color: 'var(--ink)', marginBottom: '1.25rem' }}>
                   {voice.quote}
                 </p>
-                <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--ink)' }}>
+                <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--blue)' }}>
                   {voice.author}
                 </div>
               </div>
