@@ -15,7 +15,7 @@ import AdminPage from './pages/AdminPage';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Incompute">
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
