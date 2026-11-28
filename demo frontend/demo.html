@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InCompute</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--p:#171a22;--p2:#1d212b;--line:#2a2f3b;--t:#f1f2f6;--m:#9aa1b2;--y:#ffd60a;--l:#b9b6ff;--g:#6ee7a0;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace;--sans:'Manrope',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background-color:var(--bg);background-image:linear-gradient(#b9b6ff08 1px,transparent 1px),linear-gradient(90deg,#b9b6ff08 1px,transparent 1px),radial-gradient(ellipse at 50% -15%,#29264a30,transparent 58%);background-size:32px 32px,32px 32px,auto;color:var(--t);font:15px/1.55 var(--sans)}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--y);outline-offset:2px}
+.w{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+header{position:sticky;top:0;z-index:20;background:rgba(15,17,23,.96);border-bottom:1px solid var(--line)}
+header .w{display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800}
+.logo i{width:22px;height:22px;border-radius:5px;background:var(--y);position:relative}
+.logo i:after{content:'>';position:absolute;inset:0;display:grid;place-items:center;color:#000;font:700 13px var(--mono)}
+nav.d{display:none;gap:2px;margin-left:auto}
+nav a{padding:6px 12px;border-radius:6px;color:var(--m);font-size:14px}
+nav a.on{color:#000;background:var(--y);font-weight:700}
+.tagline{display:none;font:11px var(--mono);color:var(--m)}
+.tagline:before{content:'●';color:var(--g);margin-right:7px}
+.menu{background:var(--p);border:1px solid var(--line);color:var(--t);padding:6px 14px;border-radius:6px;font:12px var(--mono);cursor:pointer}
+@media(min-width:820px){nav.d{display:flex}.tagline{display:block}.menu{display:none}}
+#drawer{position:fixed;inset:0;background:var(--bg);z-index:30;padding:16px 20px;display:none}
+#drawer.open{display:block}
+#drawer .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+#drawer .gr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#drawer a{padding:14px;background:var(--p);border:1px solid var(--line);border-radius:8px;font-size:14px}
+#drawer a:first-child{grid-column:1/-1;background:var(--y);color:#000;font-weight:700}
+#drawer a span{font:11px var(--mono);color:var(--m);margin-right:6px}
+#drawer a:first-child span{color:#000}
+.pill{display:inline-block;background:var(--y);color:#000;font:600 12px var(--mono);padding:4px 12px;border-radius:99px;margin:28px 0 14px}
+.eb{font:11px var(--mono);color:var(--m);padding-top:14px}
+h1{font-size:clamp(38px,7vw,68px);line-height:1.04;letter-spacing:-.03em;font-weight:800}
+h1.s{font-size:clamp(30px,5vw,44px)}
+h2{font-size:clamp(20px,3vw,26px);letter-spacing:-.01em;font-weight:800}
+h3{font-size:16px;font-weight:700}
+.lead{color:var(--m);max-width:64ch;margin:12px 0 22px}
+.sub{color:var(--m);font-size:14px}
+.btn{display:inline-block;padding:11px 20px;border-radius:8px;font:700 14px var(--sans);border:0;cursor:pointer;text-align:center}
+.y{background:var(--y);color:#000}.lv{background:var(--l);color:#15153a}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.card{background:var(--p);border:1px solid var(--line);border-radius:8px;padding:18px;min-width:0;transition:border-color .16s ease,background-color .16s ease,transform .16s ease}
+.card:hover{border-color:#454b5b}
+.tag{display:inline-block;font:11px var(--mono);padding:2px 9px;border-radius:99px;border:1px solid var(--line);color:var(--m);margin-right:6px}
+.tag.y{background:var(--y);color:#000;border-color:var(--y)}.tag.l{color:var(--l);border-color:var(--l)}.tag.g{color:var(--g);border-color:var(--g)}
+.grid{display:grid;gap:14px}
+@media(min-width:720px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}}
+section{padding:28px 0}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.sh a{color:var(--y);font-size:13px;font-weight:700}
+.date{font:12px var(--mono);color:var(--y)}
+.hero{display:grid;gap:24px;padding-bottom:12px}
+@media(min-width:900px){.hero{grid-template-columns:1.25fr 1fr;align-items:center}}
+.code{background:#0b0d12;border:1px solid #34394a;border-radius:8px;font:13px/1.7 var(--mono);overflow:hidden;min-width:0;box-shadow:0 12px 40px #0003}
+.code .bar{padding:9px 14px;border-bottom:1px solid var(--line);color:var(--m);font-size:12px;background:#141720}
+.code .bar b{color:var(--y);font-weight:400;margin-right:6px;letter-spacing:2px}
+.code pre{padding:14px 16px;color:var(--l);overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-color:#454b5b #0b0d12;scrollbar-width:thin}
+.c{color:var(--m)}.q{color:var(--y)}
+.cur{animation:b 1s steps(1) infinite;color:var(--y)}
+.terminal-foot{display:flex;justify-content:space-between;gap:12px;padding:8px 14px;border-top:1px solid var(--line);color:var(--m);font:10px var(--mono)}
+.terminal-foot span:last-child{color:var(--g)}
+@keyframes b{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.cur{animation:none}}
+.next{display:grid;gap:14px}
+@media(min-width:800px){.next{grid-template-columns:1fr auto;align-items:center}}
+.cd{display:flex;gap:8px;margin:10px 0}
+.cd div{background:#0b0d12;border:1px solid var(--line);border-radius:8px;padding:8px 14px;text-align:center;min-width:62px}
+.cd b{display:block;font:700 24px var(--mono);color:var(--y)}.cd span{font-size:11px;color:var(--m)}
+.row{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);min-width:0}
+.row:last-child{border:0}
+.notice{border-left:3px solid var(--line)}.notice.pin{border-left-color:var(--y)}
+.moment{height:120px;border-radius:8px;background:linear-gradient(145deg,#1d212b,#141720);border:1px solid var(--line);padding:12px;font-size:12px;display:flex;align-items:flex-end;color:var(--m);position:relative;overflow:hidden}
+.moment:before{content:'{ }';position:absolute;right:12px;top:4px;color:#b9b6ff18;font:700 54px/1 var(--mono)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+.chip{background:var(--p);border:1px solid var(--line);color:var(--m);padding:5px 12px;border-radius:6px;font:12px var(--mono);cursor:pointer;transition:background-color .12s ease,border-color .12s ease,color .12s ease}
+.chip.on{background:var(--l);border-color:var(--l);color:#15153a}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:6px 0 16px}
+.seg button{background:var(--p);border:0;color:var(--m);padding:8px 16px;font:12px var(--mono);cursor:pointer}
+.seg button.on{background:var(--l);color:#15153a}
+.obs{text-align:center;font-size:13px;color:var(--m)}.obs b{display:block;font:700 20px var(--mono);color:var(--y)}
+.av{width:42px;height:42px;border-radius:8px;background:var(--y);color:#000;display:grid;place-items:center;font:700 13px var(--mono);flex:none}
+.av.l{background:var(--l);color:#15153a}
+.person{display:flex;gap:12px}
+.person p{color:var(--m);font-size:13px;margin-top:6px}
+.links a{color:var(--l);font-size:12px;margin-right:12px;font-family:var(--mono)}
+ul.chk{list-style:none;padding:0;margin-top:8px}
+ul.chk li{padding:10px 0 10px 26px;position:relative;border-bottom:1px solid var(--line);color:var(--m)}
+ul.chk li:before{content:'✓';position:absolute;left:0;color:var(--y)}
+.lockbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:24px 0 8px;flex-wrap:wrap}
+.lockbar button{background:none;border:1px solid var(--y);color:var(--y);padding:6px 14px;border-radius:6px;font:12px var(--mono);cursor:pointer}
+.ai{font-size:13px;color:var(--m);margin-top:6px}
+footer{border-top:1px solid var(--line);margin-top:36px;padding:28px 0;color:var(--m);font-size:13px}
+footer .grid{margin-bottom:18px}
+footer h4{color:var(--t);font-size:13px;margin-bottom:4px}
+footer a{color:var(--l);margin-right:12px}
+.fnav{margin-bottom:14px}
+@media(min-width:820px){.fnav{display:none}}
+.pg{display:none;min-width:0}.pg.on{display:block}
+main,.grid>*{min-width:0}
+section h2:before{content:'// ';font:500 .62em var(--mono);color:var(--m);vertical-align:middle}
+@media(hover:hover){.btn,.chip,nav a,.menu{transition:transform .12s ease,background-color .12s ease,border-color .12s ease,color .12s ease}.chip:hover{border-color:var(--l);color:var(--t)}nav a:hover{color:var(--t);background:#ffffff08}}
+@media(max-width:420px){.w{padding-left:16px;padding-right:16px}.code pre{font-size:11px;padding:12px}.terminal-foot{font-size:9px}.cd div{min-width:56px;padding:8px 10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* Distinct footer and centered desktop navigation. */
+footer{background:#090b10;border-top:1px solid #34394a;margin-top:36px;padding:32px 0 28px;color:#9aa1b2}
+footer .grid>div:first-child h4,footer .w>p.mono{color:var(--y)}
+@media(min-width:820px){
+  header .w{position:relative;justify-content:space-between}
+  nav.d{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;justify-content:center;white-space:nowrap}
+  .tagline{margin-left:auto}
+}
+</style>
+</head>
+<body>
+<header><div class="w">
+  <a href="#home" class="logo"><i></i>InCompute</a>
+  <nav class="d" id="nav"></nav>
+  <button class="menu" id="om" aria-label="Open menu">Menu</button>
+</div></header>
+<div id="drawer"><div class="top"><span class="mono sub">// EXPLORE THE CAMPUS NETWORK</span><button class="menu" id="cm">Close</button></div><div class="gr" id="dn"></div><p class="mono" style="margin-top:28px;color:var(--m)">Code. Lead. Grow.</p></div>
+
+<main class="w">
+
+<div class="pg" id="p-home">
+  <p class="eb">// INCOMPUTE ● CAMPUS / 2026–27</p>
+  <span class="pill">Inspiria Knowledge Campus · Siliguri</span>
+  <div class="hero">
+    <div>
+      <h1>Code. Lead. Grow.</h1>
+      <p class="lead">InCompute (formerly the Computing Club) is one trusted campus hub for BCA, Data Science, AI/ML, and Cyber Security students to track events, read notices, and shape what we build next.</p>
+      <div class="btns"><a class="btn y" href="#events">See upcoming events</a><a class="btn lv" href="mailto:incompute@inspiria.edu.in?subject=Event%20idea">Suggest an event</a></div>
+    </div>
+    <div class="code"><div class="bar"><b>● ● ●</b>community.config</div>
+<pre><span class="c">// Built by students. For students.</span>
+const community = {
+  learn: [<span class="q">'BCA'</span>, <span class="q">'AI/ML'</span>],
+  build: [<span class="q">'Web'</span>, <span class="q">'Data'</span>, <span class="q">'Cyber'</span>],
+  connect: <span class="q">'Siliguri'</span>
+};
+&gt; Code. Lead. Grow. <span class="cur">_</span></pre><div class="terminal-foot"><span>INCOMPUTE / SILIGURI</span><span>● ALL SYSTEMS READY</span></div></div>
+  </div>
+  <section>
+    <div class="card next">
+      <div>
+        <span class="tag y">Next event</span><span class="tag l">Upcoming · Gaming/Testing</span>
+        <p class="date" style="margin-top:10px">12–13 Dec 2026</p>
+        <h2>School Hackathon (Classes 11 &amp; 12)</h2>
+        <p class="sub">Inspiria Knowledge Campus, Siliguri · Seminar Hall &amp; Lab 3</p>
+        <p class="mono sub" style="font-size:11px;margin-top:4px">Synced from club calendar</p>
+      </div>
+      <div>
+        <div class="cd"><div><b id="cdD">14</b><span>Days</span></div><div><b id="cdH">11</b><span>Hours</span></div><div><b id="cdM">28</b><span>Mins</span></div></div>
+        <a class="btn y" href="https://www.inspiria.edu.in" target="_blank" rel="noopener">Register on Inspiria</a>
+        <p class="sub" style="font-size:12px;margin-top:6px">Redirects to official Inspiria registration</p>
+      </div>
+    </div>
+  </section>
+  <section>
+    <h2>Why join InCompute</h2>
+    <p class="lead" style="margin-top:6px">Built for students across BCA, Data Science, AI/ML, and Cyber Security—from first-semester curiosity to final-year leadership.</p>
+    <div class="grid g4">
+      <div class="card"><h3>Technical skills</h3><p class="sub">Practice Git, web builds, data tooling, and debugging in hands-on labs alongside peers who ship real projects.</p></div>
+      <div class="card"><h3>Leadership &amp; management</h3><p class="sub">Run workshops, coordinate campus hackathons, manage rosters, and take ownership of club committees.</p></div>
+      <div class="card"><h3>Cross-year community</h3><p class="sub">Meet seniors and juniors from years 1 to 4 outside your own classroom and find teammates for competitions.</p></div>
+      <div class="card"><h3>Certificates</h3><p class="sub">Earn official participation and organizing certificates backed by Inspiria Knowledge Campus for every listed event.</p></div>
+    </div>
+  </section>
+  <section>
+    <div class="sh"><h2>Latest notices</h2><span class="tag g">Approved · 3 active</span></div>
+    <div class="grid g3">
+      <div class="card notice pin"><span class="tag y">Pinned</span><span class="tag l">New</span><p class="date" style="margin:8px 0">25 Nov 2026 · Event</p><h3>School Hackathon (12–13 Dec): Volunteer &amp; room check open</h3><p class="sub">Visiting school teams arrive 12 Dec. Confirm lab slots and student registration through the official Inspiria portal.</p></div>
+      <div class="card notice"><span class="tag l">New</span><p class="date" style="margin:8px 0">22 Nov 2026 · General</p><h3>Spring 2027 student event ideas are now open</h3><p class="sub">Have a workshop, talk, or coding challenge in mind? Bring one idea in Get Involved before 15 Dec.</p></div>
+      <div class="card notice"><span class="tag">Club Charter</span><p class="date" style="margin:8px 0">15 Nov 2026 · Deadline</p><h3>Placeholder mark active while final InCompute logo is finalized</h3><p class="sub">Club site launch targets 20 Jan 2027 ahead of InCode. All events continue to register via Inspiria's official facility.</p></div>
+    </div>
+  </section>
+  <section>
+    <div class="sh"><h2>This semester</h2><a href="#events">Full calendar</a></div>
+    <div class="card" id="he"></div>
+  </section>
+  <section>
+    <div class="sh"><h2>Recent moments</h2><span class="tag g">Consent recorded</span></div>
+    <div class="grid g3"><div class="moment">Software Freedom Day · 24 Sep 2026</div><div class="moment">Executive Committee · 24 Sep 2026</div><div class="moment">Lab 3 Peer Session · Nov 2026</div></div>
+  </section>
+</div>
+
+<div class="pg" id="p-events">
+  <p class="eb">// INCOMPUTE ● CAMPUS / 2026–27</p>
+  <span class="pill">Public club calendar · Sep 2026 – Jun 2027</span>
+  <h1 class="s">Events &amp; Observances</h1>
+  <p class="lead">Every listed event registers through the official Inspiria portal. Individual coordinator names are omitted per club charter.</p>
+  <div class="seg" id="view"><button class="on" data-v="list">List view</button><button data-v="cal">Calendar</button></div>
+  <p class="sub">Filter by status</p><div class="chips" id="fs"></div>
+  <p class="sub">Filter by type</p><div class="chips" id="ft"></div>
+  <section style="padding-top:6px">
+    <div class="sh"><h2>Charter observances</h2><span class="tag">Marked yearly</span></div>
+    <div class="grid g4"><div class="card obs"><b>15 Feb</b>Observance Day</div><div class="card obs"><b>15 Aug</b>Observance Day</div><div class="card obs"><b>3rd Sat of Sep</b>Software Freedom Day</div><div class="card obs"><b>30 Nov</b>Club Foundation</div></div>
+  </section>
+  <div id="el" class="grid g2"></div>
+  <p id="ee" class="sub" style="display:none">No events match these filters. Clear a filter to see more.</p>
+</div>
+
+<div class="pg" id="p-about">
+  <p class="eb">// INCOMPUTE ● CAMPUS / 2026–27</p>
+  <span class="pill">Club charter · Est. 30 Nov</span>
+  <h1 class="s">About InCompute</h1>
+  <p class="lead">Formerly the Computing Club at Inspiria Knowledge Campus, Siliguri—now one student-run hub for people, plans, and campus tech events.</p>
+  <section style="padding-top:6px"><div class="card">
+    <div class="sh"><h2>Our story &amp; name change</h2><span class="tag y">30 Sep decision</span></div>
+    <p class="sub" style="margin-bottom:12px">On 30 September 2026, the Computing Club formally adopted the name InCompute to reflect a wider student community across BCA, BSc Data Science, AI/ML, and Cyber Security at Inspiria Knowledge Campus.</p>
+    <p class="sub" style="margin-bottom:12px">At the 19 November meeting in Lab 3, the Executive Committee agreed to build the club’s own website so students no longer have to hunt through scattered chats, spreadsheets, and PDFs for schedules, notices, and event sign-ups.</p>
+    <span class="tag">Placeholder mark active</span><span class="tag">Final logo in progress</span>
+  </div></section>
+  <section><h2 style="margin-bottom:14px">Mission &amp; community</h2>
+    <div class="grid g2">
+      <div class="card"><p class="mono sub" style="font-size:12px">Students (Years 1–4)</p><h3>Learn, build &amp; lead</h3><p class="sub">Gives BCA, Data Science, AI/ML, and Cyber Security students one place to track upcoming events, propose workshops, and collaborate across batches.</p></div>
+      <div class="card"><p class="mono sub" style="font-size:12px">Faculty, guests &amp; schools</p><h3>Open, verifiable record</h3><p class="sub">Lets faculty, industry speakers, and visiting school teams check the official calendar, past seminars, and verified Inspiria registration links.</p></div>
+    </div></section>
+  <section>
+    <div class="sh"><h2>How the club is organised</h2><a href="#team">Meet the team →</a></div>
+    <div class="grid g3">
+      <div class="card"><span class="tag y">Meets monthly</span><h3 style="margin-top:8px">Executive Committee</h3><p class="sub">Chair, Vice-Chair, Secretary, and Treasurer. The Secretary maintains the roster, event calendar sheet, and meeting minutes; the Treasurer reviews any paid service requests.</p></div>
+      <div class="card"><h3>Working Committees</h3><p class="sub">Three student committees run daily operations: Program (event delivery and hackathons), Publicity (notices, posters, and consent-recorded gallery), and Nominating (club elections).</p></div>
+      <div class="card"><h3>Year Advisors &amp; Faculty Guides</h3><p class="sub">3rd and 4th Year Advisors connect batches with club activities, while Faculty Advisors and the Head of the School of Computer Science (Observer) review and approve all public content.</p></div>
+    </div>
+  </section>
+  <section><div class="card"><h2>Charter commitments</h2>
+    <ul class="chk">
+      <li>At least 3 events every semester and 6 events each academic year, plus 4 yearly observance markers.</li>
+      <li>Every public event is listed on the official Inspiria website and registers through Inspiria’s official facility.</li>
+      <li>Individual student and faculty names appear only on the Team page—never on posters, event cards, or promo banners.</li>
+      <li>Notices, events, and gallery albums go live only after Faculty Advisor or Chair approval, with recorded photo consent.</li>
+    </ul>
+    <div class="btns" style="margin-top:16px"><a class="btn y" href="#team">Meet the team</a><a class="btn lv" href="#meetings">Member meetings</a></div>
+  </div></section>
+  <section aria-labelledby="developers-title">
+    <div class="sh"><h2 id="developers-title">Website developers</h2><span class="tag l">3 contributors</span></div>
+    <p class="sub" style="margin:-4px 0 14px">The students building and maintaining this website.</p>
+    <div class="grid g3">
+      <article class="card person"><div class="av l" aria-hidden="true">01</div><div><h3>Developer name</h3><p>Department to be added · Year to be added</p><p class="links"><span>GitHub profile to be added</span><span>LinkedIn profile to be added</span></p></div></article>
+      <article class="card person"><div class="av l" aria-hidden="true">02</div><div><h3>Developer name</h3><p>Department to be added · Year to be added</p><p class="links"><span>GitHub profile to be added</span><span>LinkedIn profile to be added</span></p></div></article>
+      <article class="card person"><div class="av l" aria-hidden="true">03</div><div><h3>Developer name</h3><p>Department to be added · Year to be added</p><p class="links"><span>GitHub profile to be added</span><span>LinkedIn profile to be added</span></p></div></article>
+    </div>
+  </section>
+</div>
+
+<div class="pg" id="p-team">
+  <p class="eb">// INCOMPUTE ● CAMPUS / 2026–27</p>
+  <span class="pill">Posts confirmed · 20 Nov 2026</span>
+  <h1 class="s">InCompute Team</h1>
+  <p class="lead">Student office-bearers, working committees, year advisors, and faculty guides. All members consented to display their name and photo; personal emails and phone numbers are omitted.</p>
+  <div id="tb"></div>
+  <p class="sub" style="margin-top:20px"><b>Charter note:</b> The Principal is invited to club events as a guest and is not listed as a team member. For any club inquiry, write to <a href="mailto:incompute@inspiria.edu.in" style="color:var(--y)">incompute@inspiria.edu.in</a>.</p>
+</div>
+
+<div class="pg" id="p-meetings">
+  <p class="eb">// INCOMPUTE ● CAMPUS / 2026–27</p>
+  <div class="lockbar"><span class="pill" style="margin:0">Members-only · Internal record</span><button id="lk">Lock member view</button></div>
+  <div id="mb">
+    <h1 class="s">Club Meetings &amp; Minutes</h1>
+    <p class="lead">Decisions, action items, and Faculty-reviewed minutes PDFs. Kept behind member login per the 20 Nov decision—nothing here appears on the public site.</p>
+    <div class="card" style="border-color:var(--y)"><span class="tag y">Next meeting</span><h2 style="margin-top:10px">Monthly Executive Committee</h2><h3>December Readiness &amp; Exam-Window Review</h3><p class="sub" style="margin-top:6px">Scheduled for 4 Dec 2026 · Lab 3. Charter requires at least one Executive Committee meeting per month; Secretary issues minutes after Faculty Advisor review.</p></div>
+    <section><div class="sh"><h2>Recorded meetings</h2><span class="sub">3 sessions · Issued by Secretary</span></div><div class="grid g3" id="mt"></div></section>
+  </div>
+  <div class="card" id="ml" style="display:none;text-align:center;padding:50px 20px"><h2>Member view locked</h2><p class="sub" style="margin:8px 0 16px">Meeting records are visible to signed-in members only.</p><button class="btn y" id="ul">Unlock member view</button></div>
+</div>
+
+</main>
+
+<footer><div class="w">
+  <div class="fnav mono"><a href="#home">Home</a><a href="#about">About</a><a href="#events">Event</a><a href="#meetings">Meeting</a><a href="#team">Team</a></div>
+  <div class="grid g3">
+    <div><h4>InCompute</h4>Inspiria Knowledge Campus<br>Himachal Vihar, Phase-II, Siliguri, WB</div>
+    <div><h4>Official contact</h4>incompute@inspiria.edu.in<br>Club queries &amp; faculty coordination</div>
+    <div><h4>Official channels</h4><a href="https://www.inspiria.edu.in" target="_blank" rel="noopener">Inspiria Portal</a><a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Instagram</a></div>
+  </div>
+  <p>Privacy note: Student photos, emails, and phone numbers are collected only with recorded consent and used strictly for club coordination.</p>
+  <p class="mono" style="margin-top:6px">InCompute · 2026</p>
+</div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const PG=[['home','Home'],['events','Events'],['about','About'],['team','Team'],['meetings','Meetings']];
+const SC={Listed:'g','In progress':'y',Proposed:'l',Held:''};
+const EV=[
+['12–13 Dec 2026','Listed','Gaming/Testing','School Hackathon (Classes 11 & 12)','Two-day campus hackathon for visiting school students. Note: inside theory exam window (4–19 Dec); room & staff slots confirmed.',1,'2026-12'],
+['28–29 Jan 2027','Listed','Technical','InCode','Flagship technical coding event kicking off the Spring semester (starts 27 Jan; clear of holidays).',1,'2027-01'],
+['10 Feb 2027','In progress','Technical','Coding Challenge','Fast-paced problem solving and debugging round. Scheduled day before Saraswati Puja (11 Feb).',0,'2027-02'],
+['18 Mar 2027','Listed','Alumni Talk','Alumni Talk — BCA','Guest session with a BCA graduate on transitioning from campus projects to engineering teams.',0,'2027-03'],
+['Dec 2026 (TBC)','Proposed','Data Analytics','Webel IT Expert Lecture','Guest lecture on applied data analytics pipelines. Date being confirmed for early December.',0,'2026-12'],
+['24 Sep 2026','Held','Web Development','Software Freedom Day ("Merge to Main")','Seminar on open-source workflows and Git branching. Slides and consent-recorded gallery photos archived.',0,'2026-09']];
+const HE=[['12–13 Dec 2026','School Hackathon (Classes 11 & 12)','Workshop · Gaming/Testing','Listed'],['28–29 Jan 2027','InCode','Technical · Flagship semester start','Listed'],['10 Feb 2027','Coding Challenge','Fun event · Speed & logic','In progress'],['5–6 Mar 2027','Technical Workshop (Guest Speakers)','Workshop · Industry track','Listed'],['18 Mar 2027','Alumni Talk — BCA','Alumni Talk · Career Q&A','Listed']];
+const TM=[
+['Faculty & guides','3 advisors',[['AD','Aritra Dey','Faculty Advisor','Assistant Professor, BCA, Inspiria Knowledge Campus. Reviews club notices, calendar entries, and approvals.','BCA Approvals'],['JS','Jyotirmoi Sir','Faculty Advisor','Assistant Professor, BCA, Inspiria Knowledge Campus. Guides student technical tracks and faculty coordination.','BCA Mentorship'],['MJ','MJ Sir','Observer','Head of the School of Computer Science (BCA, BSc Data Science, AI & technical departments). Oversees club governance and campus alignment.']],1],
+['Executive committee','4 office-bearers',[['BR','Bharati Roy','Chair','BSc in Data Science','Leads the club, chairs monthly Executive Committee meetings, and co-approves public notices.',1],['GG','Gareema Kumari Gupta','Vice-Chair','BSc in IT(AI)','Concept lead for the Styled CSS workshop and lead for the June developer tools workshop (1–4 Jun).',1],['SA','Simple Agarwal','Secretary','BSc in IT(AI)','Issues meeting minutes, maintains the member roster, and keeps the club event calendar sheet current.'],['AR','Aman Kumar Ranjan','Treasurer','BCA','Keeps the club’s financial records and reviews any paid tool or domain requests before faculty approval.']]],
+['Committees','Program · Publicity · Nominating',[['AS','Arya Shree','Program Committee · BCA','Concept lead for the Technical Hunt and owner of InCode (28–29 Jan 2027).'],['SG','Supratik Gope','Program Committee · BCA','Lead for the 10 Feb coding challenge and hands-on problem-solving sessions.'],['CR','Charu Rathi','Publicity Committee · BSc in IT(AI)','Handles posters, official announcements, and consent-recorded gallery archives.'],['RS','Rishikesh Kumar Shah','Publicity Committee · BCA','Creates event posters, noticeboard updates, and official channel graphics.'],['AP','Ayush Prasad','Nominating Committee · BCA','Coordinates annual club nominations and transparent student elections.'],['KS','Kusum Singh','Nominating Committee · BCA','Oversees candidate nominations and election handovers across batches.']]],
+['Year advisors','Batch links',[['RD','Ridam Rabi Das','3rd Year Advisor · BCA','Direct link to the 3rd-year batch for event participation and peer mentoring.'],['BS','Biplob Sinha','4th Year Advisor · BSc Data Science','Link to the 4th-year batch and guides annual club elections.']]]];
+const MT=[
+['19 Nov 2026 · 2:45–4:30 PM · Lab 3','Executive Committee','Review of inputs, website, calendar and responsibilities','Decisions: Inputs from first and second year students reviewed; logo in progress; website requirements discussed; event calendar design finalised; responsibilities distributed; club will also run in-house events.',[['Collect member photos & open questions · Secretary','Due 27 Nov',''],['Build first site version · Program & Faculty Reviewer','Due 18 Dec','y']],'Minutes PDF (Faculty reviewed)'],
+['4 Nov 2026 · Seminar Room','Faculty','Responsibility allocation and action plan with MJ Sir','Decisions: Gather inputs from every member; prepare a clear plan; each member defines and owns their responsibilities; name the key success factors.',[['Submit committee role charters · All Leads','Done','g']],'Minutes PDF (Approved)'],
+['21 Sep 2026 · Main Auditorium','General body','Investiture ceremony planning','Decisions: Opening addresses by the Principal, MJ Sir and the HOD (subject to confirmation); oath for newly appointed members; chair acceptance speech; junior presentations; fun session.',[['Collect and demo presentations · Program Committee','Done','g']],'Minutes PDF (Approved)']];
+
+function nav(k){
+ $('#nav').innerHTML=PG.map(([a,b])=>`<a href="#${a}" class="${a===k?'on':''}">${b}</a>`).join('');
+ $('#dn').innerHTML=PG.map(([a,b],i)=>`<a href="#${a}"><span>0${i+1} / →</span>${b}</a>`).join('');
+}
+function route(){
+ let k=location.hash.slice(1);if(!PG.some(p=>p[0]===k))k='home';
+ document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.id==='p-'+k));
+ nav(k);$('#drawer').classList.remove('open');scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+$('#om').onclick=()=>$('#drawer').classList.add('open');
+$('#cm').onclick=()=>$('#drawer').classList.remove('open');
+
+$('#he').innerHTML=HE.map(e=>`<div class="row"><div><span class="date">${e[0]}</span><h3>${e[1]}</h3><span class="sub">${e[2]}</span></div><span class="tag ${SC[e[3]]}" style="margin:0">${e[3]}</span></div>`).join('');
+function tick(){const ms=Math.max(0,new Date('2026-12-12T09:00:00+05:30')-new Date());$('#cdD').textContent=Math.floor(ms/864e5);$('#cdH').textContent=Math.floor(ms%864e5/36e5);$('#cdM').textContent=Math.floor(ms%36e5/6e4)}
+tick();setInterval(tick,30000);
+
+let fS='All',fT='All types',vw='list';
+const ST=['All','Listed','In progress','Proposed','Held'],TP=['All types','Technical','Web Dev','Data Analytics','Gaming/Testing','Alumni Talk'];
+function chips(el,a,c,f){el.innerHTML=a.map(x=>`<button class="chip ${x===c?'on':''}">${x}</button>`).join('');[...el.children].forEach((b,i)=>b.onclick=()=>f(a[i]))}
+function ec(e){return `<article class="card"><p class="date">${e[0]}</p><div style="margin:6px 0"><span class="tag ${SC[e[1]]}">${e[1]}</span><span class="tag">${e[2]}</span></div><h3>${e[3]}</h3><p class="sub" style="margin-top:6px">${e[4]}</p>${e[5]?'<a class="btn y" style="margin-top:12px;padding:8px 16px;font-size:13px" href="https://www.inspiria.edu.in" target="_blank" rel="noopener">Register on Inspiria</a>':''}</article>`}
+function rEv(){
+ chips($('#fs'),ST,fS,v=>{fS=v;rEv()});chips($('#ft'),TP,fT,v=>{fT=v;rEv()});
+ const L=EV.filter(e=>(fS==='All'||e[1]===fS)&&(fT==='All types'||e[2]===(fT==='Web Dev'?'Web Development':fT)));
+ $('#ee').style.display=L.length?'none':'block';
+ if(vw==='list')$('#el').innerHTML=L.map(ec).join('');
+ else{const by={};[...L].sort((a,b)=>a[6].localeCompare(b[6])).forEach(e=>(by[e[6]]=by[e[6]]||[]).push(e));
+  $('#el').innerHTML=Object.entries(by).map(([m,es])=>`<h2 class="mono" style="grid-column:1/-1;font-size:16px;color:var(--y);margin-top:10px">${new Date(m+'-01T00:00').toLocaleString('en',{month:'long',year:'numeric'})}</h2>`+es.map(ec).join('')).join('')}
+}
+document.querySelectorAll('#view button').forEach(b=>b.onclick=()=>{vw=b.dataset.v;document.querySelectorAll('#view button').forEach(x=>x.classList.toggle('on',x===b));rEv()});
+rEv();
+
+$('#tb').innerHTML=TM.map(([t,n,ms,fac])=>`<section style="padding:18px 0"><div class="sh"><h2>${t}</h2><span class="sub">${n}</span></div><div class="grid g3">${ms.map(m=>{
+ const ex=t==='Executive committee';
+ return `<div class="card person"><div class="av ${fac?'l':''}">${m[0]}</div><div><h3>${m[1]}</h3><span class="tag ${fac?'l':'y'}" style="margin-top:4px">${m[2]}</span>${ex?`<span class="tag">${m[3]}</span><p>${m[4]}</p>${m[5]?'<p class="links"><a href="#">GitHub</a><a href="#">LinkedIn</a></p>':''}`:`<p>${m[3]}</p>${m[4]?`<span class="tag l" style="margin-top:8px">${m[4]}</span>`:''}`}</div></div>`}).join('')}</div></section>`).join('');
+
+$('#mt').innerHTML=MT.map(m=>`<div class="card"><p class="date">${m[0]}</p><span class="tag l" style="margin-top:6px">${m[1]}</span><h3 style="margin:8px 0">${m[2]}</h3><p class="sub">${m[3]}</p><p class="mono sub" style="margin:12px 0 2px;font-size:12px">Action items</p>${m[4].map(a=>`<p class="ai">• ${a[0]} <span class="tag ${a[2]}">${a[1]}</span></p>`).join('')}<p style="margin-top:12px"><a class="date" href="#meetings">${m[5]}</a></p></div>`).join('');
+function lock(o){$('#mb').style.display=o?'none':'block';$('#ml').style.display=o?'block':'none';$('#lk').style.display=o?'none':'inline-block'}
+$('#lk').onclick=()=>lock(true);$('#ul').onclick=()=>lock(false);
+route();
+</script>
+</body>
+</html>
