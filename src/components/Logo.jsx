@@ -58,7 +58,7 @@ export default function Logo({ height = 34, onDark = false }) {
         }}
       >
         <img
-          src="/inspiria-logo.png"
+          src={`${import.meta.env.BASE_URL}inspiria-logo.png`}
           alt="Inspiria Knowledge Campus"
           style={{
             height: `${height}px`,

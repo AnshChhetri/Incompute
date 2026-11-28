@@ -14,11 +14,14 @@ function getInitials(name) {
 
 function MemberAvatar({ member }) {
   const [imgFailed, setImgFailed] = React.useState(false);
+  const photoSrc = member.photoUrl?.startsWith('/')
+    ? `${import.meta.env.BASE_URL}${member.photoUrl.slice(1)}`
+    : member.photoUrl;
 
-  if (member.photoUrl && !imgFailed) {
+  if (photoSrc && !imgFailed) {
     return (
       <img
-        src={member.photoUrl}
+        src={photoSrc}
         alt={member.name}
         onError={() => setImgFailed(true)}
         style={{
