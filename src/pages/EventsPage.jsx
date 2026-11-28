@@ -13,7 +13,7 @@ const CATEGORY_FILTERS = [
   'Technical',
 ];
 
-const STATUS_FILTERS = ['All', 'Proposed', 'In progress', 'Held'];
+const STATUS_FILTERS = ['All', 'In progress', 'Proposed', 'Held'];
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -94,7 +94,15 @@ export default function EventsPage() {
           <div className="card" style={{ marginBottom: '2rem' }}>
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
-                <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--ink)' }}>Filters:</span>
+                <select
+                  aria-label="Filter by event status"
+                  className="form-control"
+                  style={{ width: 'auto', minWidth: '155px' }}
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                >
+                  {STATUS_FILTERS.map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
 
                 <select
                   aria-label="Filter by event type"
@@ -103,26 +111,9 @@ export default function EventsPage() {
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
                 >
-                  {CATEGORY_FILTERS.map((c) => (
-                    <option key={c} value={c}>
-                      Type: {c}
-                    </option>
-                  ))}
+                  {CATEGORY_FILTERS.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
 
-                <select
-                  aria-label="Filter by event status"
-                  className="form-control"
-                  style={{ width: 'auto', minWidth: '155px' }}
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                  {STATUS_FILTERS.map((s) => (
-                    <option key={s} value={s}>
-                      Status: {s}
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <div style={{ display: 'flex', gap: '0.5rem' }}>

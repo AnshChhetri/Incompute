@@ -1,19 +1,13 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import Logo from './Logo';
-import { CLUB_INFO } from '../data/clubData';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Home' },
+  { to: '/events', label: 'Events' },
   { to: '/about', label: 'About' },
   { to: '/team', label: 'Team' },
-  { to: '/events', label: 'Events' },
-  { to: '/notices', label: 'Notices' },
-  { to: '/gallery', label: 'Gallery' },
-  { to: '/get-involved', label: 'Get Involved' },
   { to: '/meetings', label: 'Meetings' },
-  { to: '/contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -21,44 +15,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Top announcement bar */}
-      <div className="top-bar">
-        <div className="container top-bar-inner">
-          <div>
-            2026–27 Session · School of Computer Application |{' '}
-            <Link
-              to="/events/evt-school-hackathon"
-              className="top-bar-accent"
-              style={{ textDecoration: 'none' }}
-            >
-              School Hackathon registration closes 10 Dec 2026
-            </Link>
-          </div>
-          <div className="top-bar-links">
-            <a
-              href="https://inspiria.edu.in/degree-courses/school-of-computer-application/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              School of Computing
-            </a>
-            <Link to="/get-involved">Bring One Idea</Link>
-            <Link to="/admin">Officer Admin</Link>
-          </div>
-        </div>
-      </div>
-
       {/* Main header */}
       <header className="site-header">
         <div className="container nav-bar">
           <Link to="/" className="brand-link" aria-label="InCompute Home">
-            <Logo height={32} />
-            <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
-              <span style={{ color: 'var(--blue)', fontWeight: 700 }}>InCompute</span>
-              <span style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--ink-muted)' }}>
-                {CLUB_INFO.tagline}
-              </span>
-            </span>
+            <span className="demo-mark" aria-hidden="true">&gt;</span>
+            <span>InCompute</span>
           </Link>
 
           <nav className="nav-links" aria-label="Main navigation">
@@ -99,6 +61,10 @@ export default function Navbar() {
                 {item.label}
               </NavLink>
             ))}
+            <NavLink to="/notices" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Notices</NavLink>
+            <NavLink to="/gallery" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Gallery</NavLink>
+            <NavLink to="/get-involved" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Get Involved</NavLink>
+            <NavLink to="/contact" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Contact</NavLink>
             <NavLink
               to="/admin"
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}

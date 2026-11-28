@@ -75,6 +75,38 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="section-band band-white">
+        <div className="container">
+          <div className="section-header">
+            <div>
+              <span className="eyebrow">THE BUILDERS</span>
+              <h2>Website developers</h2>
+              <p style={{ marginBottom: 0 }}>The students building and maintaining this website.</p>
+            </div>
+          </div>
+          <div className="grid-3">
+            {[
+              { name: 'Gareema Kumari Gupta', initials: 'GK' },
+              { name: 'Ansh Chhetri', initials: 'AC' },
+              { name: 'Aayan Sha', initials: 'AS' },
+            ].map((developer, index) => (
+              <article className="card developer-card" key={developer.name}>
+                <div className="developer-avatar">{developer.initials}</div>
+                <div>
+                  <span className="eyebrow">DEVELOPER 0{index + 1}</span>
+                  <h3>{developer.name}</h3>
+                  <p>Department to be added · Year to be added</p>
+                  <div className="developer-links">
+                    <span>GitHub profile to be added</span>
+                    <span>LinkedIn profile to be added</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
