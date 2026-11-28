@@ -68,7 +68,6 @@ export default function Logo({ height = 34, onDark = false }) {
           }}
         />
       </span>
-      <InComputeMark size={Math.max(28, Math.round(height * 0.9))} />
     </span>
   );
 }
