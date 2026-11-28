@@ -653,6 +653,7 @@ export const TEAM_DATA = [
     bio: 'Faculty member supporting InCompute activities.',
     skills: ['Faculty'],
     photoConsent: true,
+    photoUrl: '/team/mrityunjay.jpg',
   },
   {
     id: 'tm-chair',
